@@ -1,0 +1,25 @@
+单例-dispatch_once和@synchronized
+
+一，@synchronized方式
++ (id)sharedInstance
+{
+    static Instance *obj = nil;
+    @synchronized([Instance class])
+    {
+        if(!obj)
+            obj = [[Instance alloc] init];
+    }
+    return obj;
+}
+@synchronized 互斥锁
+
+二，GCD的方法
++ (id)sharedInstance
+{
+    static dispatch_once_t pred;
+    static Instance *obj = nil;
+    dispatch_once(&pred, ^{
+        obj = [[Instance alloc] init];
+    });
+    return obj;
+}
